@@ -13,7 +13,7 @@ class BinaryGatingUnit(nn.Module):
         prob = torch.sigmoid(x)
         logits = torch.stack([prob, 1 - prob], dim=-1)
         gumbel_mask = F.gumbel_softmax(logits, tau=self.tau, hard=True)
-        bern = gumbel_mask[..., 0]
+        bern = gumbel_mask[:, 0]
         bias = torch.where(bern == 1, 1 - prob, -prob)
         mask = prob + bias
         bgu = x * mask
